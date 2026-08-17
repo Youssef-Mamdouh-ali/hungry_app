@@ -7,8 +7,7 @@ import 'package:hungry_app/core/theme/app_text_style.dart';
 import 'package:hungry_app/core/widgets/custom_elevated_button.dart';
 import 'package:hungry_app/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:hungry_app/features/cart/presentation/cubit/cart_state.dart';
-import 'package:hungry_app/features/cart/widget/cart_item_widget.dart'
-    show CartItemWidget;
+import 'package:hungry_app/features/cart/presentation/widget/cart_item_widget.dart';
 
 class CartView extends StatelessWidget {
   const CartView({super.key});
@@ -26,17 +25,11 @@ class CartView extends StatelessWidget {
 
           final items = state.items;
 
-          // =========================
-          // EMPTY CART
-          // =========================
 
           if (items.isEmpty) {
             return const Center(child: Text('Your cart is empty'));
           }
 
-          // =========================
-          // CART
-          // =========================
 
           return Padding(
             padding: const EdgeInsets.all(16),
@@ -72,9 +65,6 @@ class CartView extends StatelessWidget {
                   ),
                 ),
 
-                // =========================
-                // TOTAL
-                // =========================
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   width: double.infinity,

@@ -44,9 +44,7 @@ class ProductCubit extends Cubit<ProductState> {
     }
   }
 
-  // =========================
   // Topping
-  // =========================
 
   void toggleTopping(ToppingEntity topping) {
     if (state is! ProductSuccess) return;
@@ -81,9 +79,7 @@ class ProductCubit extends Cubit<ProductState> {
     );
   }
 
-  // =========================
   // Side Option
-  // =========================
 
   void toggleSideOption(SideOptionEntity sideOption) {
     if (state is! ProductSuccess) return;
@@ -118,9 +114,7 @@ class ProductCubit extends Cubit<ProductState> {
     );
   }
 
-  // =========================
   // Calculate Total
-  // =========================
 
   double _calculateTotal({
     required double productPrice,

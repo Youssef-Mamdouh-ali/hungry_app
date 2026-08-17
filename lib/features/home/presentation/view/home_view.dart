@@ -51,13 +51,11 @@ class _HomeViewState extends State<HomeView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    // ================= HEADER =================
 
                     const CustomHeaderWidget(),
 
                     const Gap(15),
 
-                    // ================= SEARCH =================
                     SearchField(
                       search: _search,
                       onChanged: (value) {
@@ -67,7 +65,6 @@ class _HomeViewState extends State<HomeView> {
 
                     const Gap(30),
 
-                    // ================= CATEGORIES =================
 
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -99,7 +96,6 @@ class _HomeViewState extends State<HomeView> {
 
                     const Gap(30),
 
-                    // ================= PRODUCTS =================
 
                     Expanded(
                       child: BlocBuilder<HomeCubit, HomeState>(

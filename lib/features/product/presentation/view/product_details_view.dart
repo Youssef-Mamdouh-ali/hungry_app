@@ -44,10 +44,6 @@ class _ProductDetailsViewState
 
       child: Scaffold(
 
-        // =====================================================
-        // APP BAR
-        // =====================================================
-
         appBar: AppBar(
           elevation: 0,
           backgroundColor: AppColors.white,
@@ -63,38 +59,26 @@ class _ProductDetailsViewState
           ),
         ),
 
-        // =====================================================
-        // BODY
-        // =====================================================
 
         body: SafeArea(
           child: BlocBuilder<ProductCubit, ProductState>(
             builder: (context, state) {
 
-              // -------------------------
               // Loading
-              // -------------------------
-
               if (state is ProductLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
 
-              // -------------------------
               // Failure
-              // -------------------------
-
               if (state is ProductFailure) {
                 return Center(
                   child: Text(state.message),
                 );
               }
 
-              // -------------------------
               // Success
-              // -------------------------
-
               if (state is ProductSuccess) {
                 return SingleChildScrollView(
                   padding: const EdgeInsets.only(
@@ -107,10 +91,6 @@ class _ProductDetailsViewState
 
                     children: [
 
-                      // =========================
-                      // Product Image
-                      // =========================
-
                       Center(
                         child: SizedBox(
                           height: 220,
@@ -122,10 +102,6 @@ class _ProductDetailsViewState
                       ),
 
                       const Gap(10),
-
-                      // =========================
-                      // Product Name
-                      // =========================
 
                       Padding(
                         padding:
@@ -141,9 +117,6 @@ class _ProductDetailsViewState
 
                       const Gap(5),
 
-                      // =========================
-                      // Description
-                      // =========================
 
                       Padding(
                         padding:
@@ -159,9 +132,6 @@ class _ProductDetailsViewState
 
                       const Gap(5),
 
-                      // =========================
-                      // Rating
-                      // =========================
 
                       Padding(
                         padding:
@@ -177,10 +147,6 @@ class _ProductDetailsViewState
 
                       const Gap(20),
 
-                      // =========================
-                      // Spicy Level
-                      // =========================
-
                       BurgerCustomizationWidget(
                         spicyLevel: sliderValue,
 
@@ -193,10 +159,6 @@ class _ProductDetailsViewState
 
                       const Gap(20),
 
-                      // =========================
-                      // Toppings
-                      // =========================
-
                       ToppingWidget(
                         toppings: state.toppings,
                         selectedToppings:
@@ -204,10 +166,6 @@ class _ProductDetailsViewState
                       ),
 
                       const Gap(20),
-
-                      // =========================
-                      // Side Options
-                      // =========================
 
                       SideOptionsWidget(
                         sideOptions: state.sideOptions,
@@ -223,10 +181,6 @@ class _ProductDetailsViewState
             },
           ),
         ),
-
-        // =====================================================
-        // BOTTOM SHEET
-        // =====================================================
 
         bottomSheet: BlocBuilder<ProductCubit, ProductState>(
           builder: (context, state) {

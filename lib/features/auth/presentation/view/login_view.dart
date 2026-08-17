@@ -52,7 +52,7 @@ class _LoginViewState extends State<LoginView> {
 
               SvgPicture.asset(
                 "assets/logo.svg",
-                color: AppColors.primary,
+                colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
               ),
 
               const Gap(70),

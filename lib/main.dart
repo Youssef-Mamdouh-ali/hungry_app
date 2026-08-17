@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hungry_app/firebase_options.dart';
-import 'package:hungry_app/splash_view.dart';
-
 import 'core/di/injection_container.dart';
 import 'core/router/app_router.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';

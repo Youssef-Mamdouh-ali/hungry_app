@@ -10,10 +10,8 @@ class BurgerCustomizationWidget extends StatelessWidget {
     required this.onSpicyLevelChanged,
   });
 
-  /// Current spice level, expected to be in the [0, 1] range.
   final double spicyLevel;
 
-  /// Called when the user drags the slider to a new value.
   final ValueChanged<double>? onSpicyLevelChanged;
 
   static const double _minSpicy = 0;
@@ -64,7 +62,6 @@ class BurgerCustomizationWidget extends StatelessWidget {
   }
 }
 
-/// The descriptive rich-text shown above the slider.
 class _CustomizationDescription extends StatelessWidget {
   const _CustomizationDescription({required this.textTheme});
 
