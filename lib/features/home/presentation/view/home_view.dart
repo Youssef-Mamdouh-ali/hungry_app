@@ -41,131 +41,203 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<HomeCubit>()..getProducts(),
+
       child: Builder(
         builder: (context) {
           return Scaffold(
             body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final width = constraints.maxWidth;
+
+                  // Responsive Values
+                  final horizontalPadding = width < 360
+                      ? 12.0
+                      : width < 600
+                      ? 16.0
+                      : 24.0;
+
+                  final gapAfterSearch = width < 360
+                      ? 20.0
+                      : 30.0;
+
+                  final gapAfterCategories = width < 360
+                      ? 20.0
+                      : 30.0;
 
 
-                    const CustomHeaderWidget(),
+                  final crossAxisCount = width < 600 ? 2 : 3;
 
-                    const Gap(15),
+                  final crossAxisSpacing = width < 360
+                      ? 8.0
+                      : 10.0;
 
-                    SearchField(
-                      search: _search,
-                      onChanged: (value) {
-                        context.read<HomeCubit>().searchProducts(value);
-                      },
+                  final mainAxisSpacing = width < 360
+                      ? 8.0
+                      : 10.0;
+
+                  final childAspectRatio = width < 360
+                      ? 0.65
+                      : 0.8;
+
+                  return Padding(
+                    padding: EdgeInsets.all(
+                      horizontalPadding,
                     ),
 
-                    const Gap(30),
+                    child: Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
 
+                      children: [
+                        /// Header
 
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          categories.length,
-                              (index) {
-                            return CategoriesList(
-                              index: index,
-                              categories: categories,
-                              selectedIndex: selectedIndex,
+                        const CustomHeaderWidget(),
 
-                              onTap: () {
-                                setState(() {
-                                  selectedIndex = index;
-                                });
+                        const Gap(15),
 
-                                context
-                                    .read<HomeCubit>()
-                                    .filterByCategory(
-                                  categories[index],
-                                );
-                              },
-                            );
+                        /// Search
+
+                        SearchField(
+                          search: _search,
+
+                          onChanged: (value) {
+                            context
+                                .read<HomeCubit>()
+                                .searchProducts(value);
                           },
                         ),
-                      ),
-                    ),
 
-                    const Gap(30),
+                        Gap(gapAfterSearch),
+
+                        /// Categories
 
 
-                    Expanded(
-                      child: BlocBuilder<HomeCubit, HomeState>(
-                        builder: (context, state) {
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
 
-                          // Loading
-                          if (state is HomeLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
+                          child: Row(
+                            children: List.generate(
+                              categories.length,
 
-                          // Error
-                          if (state is HomeFailure) {
-                            return Center(
-                              child: Text(
-                                state.message,
-                              ),
-                            );
-                          }
+                                  (index) {
+                                return CategoriesList(
+                                  index: index,
 
-                          // Success
-                          if (state is HomeSuccess) {
-                            final products = state.products;
+                                  categories: categories,
 
-                            // No products
-                            if (products.isEmpty) {
-                              return const Center(
-                                child: Text(
-                                  'No products found',
-                                ),
-                              );
-                            }
+                                  selectedIndex:
+                                  selectedIndex,
 
-                            return GridView.builder(
-                              itemCount: products.length,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIndex =
+                                          index;
+                                    });
 
-                              gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 5,
-                                childAspectRatio: 0.7,
-                              ),
-
-                              itemBuilder: (context, index) {
-                                final product = products[index];
-
-                                return GestureDetector(
-                                    onTap: () {
-                                      context.push(
-                                        AppRoutes.productDetails,
-                                        extra: product,
-                                      );
-                                    },
-
-                                  child: CustomProductWidget(
-                                    product: product,
-                                  ),
+                                    context
+                                        .read<HomeCubit>()
+                                        .filterByCategory(
+                                      categories[index],
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          }
+                            ),
+                          ),
+                        ),
 
-                          return const SizedBox();
-                        },
-                      ),
+                        Gap(gapAfterCategories),
+
+                        /// Products
+
+                        Expanded(
+                          child: BlocBuilder<
+                              HomeCubit,
+                              HomeState>(
+                            builder: (context, state) {
+                              // Loading
+                              if (state is HomeLoading) {
+                                return const Center(
+                                  child:
+                                  CircularProgressIndicator(),
+                                );
+                              }
+
+                              // Error
+                              if (state is HomeFailure) {
+                                return Center(
+                                  child: Text(
+                                    state.message,
+                                  ),
+                                );
+                              }
+
+                              // Success
+                              if (state is HomeSuccess) {
+                                final products =
+                                    state.products;
+
+                                // No Products
+                                if (products.isEmpty) {
+                                  return const Center(
+                                    child: Text(
+                                      'No products found',
+                                    ),
+                                  );
+                                }
+
+                                return GridView.builder(
+                                  itemCount:
+                                  products.length,
+
+                                  gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                    crossAxisCount,
+
+                                    crossAxisSpacing:
+                                    crossAxisSpacing,
+
+                                    mainAxisSpacing:
+                                    mainAxisSpacing,
+
+                                    childAspectRatio:
+                                    childAspectRatio,
+                                  ),
+
+                                  itemBuilder:
+                                      (context, index) {
+                                    final product =
+                                    products[index];
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        context.push(
+                                          AppRoutes
+                                              .productDetails,
+                                          extra: product,
+                                        );
+                                      },
+
+                                      child:
+                                      CustomProductWidget(
+                                        product:
+                                        product,
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+
+                              return const SizedBox();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           );

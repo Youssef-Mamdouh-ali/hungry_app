@@ -13,11 +13,15 @@ class CustomProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      width: 185,
-      height: 250,
+      width: double.infinity,
+
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+      ),
+
       decoration: BoxDecoration(
         color: Colors.white,
+
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,
@@ -26,12 +30,14 @@ class CustomProductWidget extends StatelessWidget {
             offset: const Offset(2, 4),
           ),
         ],
+
         borderRadius: BorderRadius.circular(12),
       ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Image
+          // Image
           Center(
             child: SizedBox(
               width: 120,
@@ -43,19 +49,23 @@ class CustomProductWidget extends StatelessWidget {
             ),
           ),
 
-          /// Name
+          // Name
           Text(
             product.name,
             style: AppTextStyle.black16W700,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
 
-          /// Description
+          // Description
           Text(
             product.description,
             style: AppTextStyle.black14Regular,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
 
-          /// Rating
+          // Rating
           Text(
             "⭐${product.rating}",
           ),

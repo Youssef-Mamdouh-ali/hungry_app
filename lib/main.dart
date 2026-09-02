@@ -2,37 +2,32 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hungry_app/firebase_options.dart';
+
 import 'core/di/injection_container.dart';
 import 'core/router/app_router.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/auth/presentation/view/login_view.dart';
+import 'features/auth/presentation/view/profile_view.dart';
+import 'features/auth/presentation/view/sign_up_view.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   setupDependencies();
 
-  await SystemChrome.setPreferredOrientations(
-    [
-      DeviceOrientation.portraitUp,
-    ],
-  );
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<AuthCubit>(
-          create: (_) => sl<AuthCubit>(),
-        ),
+        BlocProvider<AuthCubit>(create: (_) => sl<AuthCubit>()),
 
-        BlocProvider<CartCubit>(
-          create: (_) => CartCubit(),
-        ),
+        BlocProvider<CartCubit>(create: (_) => CartCubit()),
       ],
       child: const MyApp(),
     ),
@@ -44,14 +39,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
-      debugShowCheckedModeBanner: false,
-      title: 'Hungry App',
-      theme: ThemeData(
-        splashColor: Colors.transparent,
-      ),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          routerConfig: router,
+          debugShowCheckedModeBanner: false,
+          title: 'Hungry App',
+          theme: ThemeData(splashColor: Colors.transparent),
+        );
+      },
     );
-
   }
 }
+
+
+

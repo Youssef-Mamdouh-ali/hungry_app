@@ -15,109 +15,173 @@ class CartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cart', style: AppTextStyle.black20Bold)),
+      appBar: AppBar(
+        title: Text(
+          'Cart',
+          style: AppTextStyle.black20Bold,
+        ),
+      ),
 
-      body: BlocBuilder<CartCubit, CartState>(
-        builder: (context, state) {
-          if (state is! CartUpdated) {
-            return const SizedBox();
-          }
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
 
-          final items = state.items;
+          // Responsive values
+          final isSmallMobile = width < 360;
+          final isLargeMobile = width >= 400;
 
+          final screenPadding = isSmallMobile
+              ? 12.0
+              : isLargeMobile
+              ? 20.0
+              : 16.0;
 
-          if (items.isEmpty) {
-            return const Center(child: Text('Your cart is empty'));
-          }
+          final summaryHeight = isSmallMobile ? 80.0 : 90.0;
 
+          final buttonWidth = isSmallMobile
+              ? 120.0
+              : isLargeMobile
+              ? 160.0
+              : 140.0;
 
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: items.length,
+          return BlocBuilder<CartCubit, CartState>(
+            builder: (context, state) {
+              if (state is! CartUpdated) {
+                return const SizedBox();
+              }
 
-                    itemBuilder: (context, index) {
-                      final item = items[index];
+              final items = state.items;
 
-                      return CartItemWidget(
-                        item: item,
+              if (items.isEmpty) {
+                return const Center(
+                  child: Text('Your cart is empty'),
+                );
+              }
 
-                        onAdd: () {
-                          context.read<CartCubit>().increaseQuantity(index);
+              return Padding(
+                padding: EdgeInsets.all(screenPadding),
+
+                child: Column(
+                  children: [
+                    /// Cart Items
+
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: items.length,
+
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+
+                          return CartItemWidget(
+                            item: item,
+
+                            onAdd: () {
+                              context
+                                  .read<CartCubit>()
+                                  .increaseQuantity(index);
+                            },
+
+                            onRemove: () {
+                              context
+                                  .read<CartCubit>()
+                                  .decreaseQuantity(index);
+                            },
+
+                            removeItem: () {
+                              context
+                                  .read<CartCubit>()
+                                  .removeFromCart(index);
+                            },
+                          );
                         },
 
-                        onRemove: () {
-                          context.read<CartCubit>().decreaseQuantity(index);
+                        separatorBuilder: (_, __) {
+                          return const SizedBox(
+                            height: 12,
+                          );
                         },
-
-                        removeItem: () {
-                          context.read<CartCubit>().removeFromCart(index);
-                        },
-                      );
-                    },
-
-                    separatorBuilder: (_, __) {
-                      return const SizedBox(height: 12);
-                    },
-                  ),
-                ),
-
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  width: double.infinity,
-                  height: 90,
-
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        spreadRadius: 3,
-                        blurRadius: 4,
                       ),
-                    ],
-                  ),
+                    ),
 
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Total', style: AppTextStyle.black18W700),
+                    const SizedBox(height: 12),
 
-                            Text(
-                              '\$ ${state.totalPrice.toStringAsFixed(2)}',
-                              style: AppTextStyle.black24W700,
+
+                    Container(
+                      width: double.infinity,
+                      height: summaryHeight,
+
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isSmallMobile ? 10 : 12,
+                      ),
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+
+                        color: Colors.white,
+
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 3,
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: AppTextStyle.black18W700,
+                                ),
+
+                                Text(
+                                  '\$ ${state.totalPrice.toStringAsFixed(2)}',
+
+                                  style: isSmallMobile
+                                      ? AppTextStyle.black20W700
+                                      : AppTextStyle.black24W700,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+
+                          CustomElevatedButton(
+                            text: 'Pay Now',
+
+                            onPressed: () {
+                              context.push(
+                                AppRoutes.checkout,
+                              );
+                            },
+
+                            height: 50,
+
+                            width: buttonWidth,
+
+                            backgroundColor:
+                            AppColors.primary,
+
+                            foregroundColor: Colors.white,
+                          ),
+                        ],
                       ),
-
-                      CustomElevatedButton(
-                        text: 'Pay Now',
-
-                        onPressed: () {
-                          context.push(AppRoutes.checkout);
-                        },
-
-                        height: 50,
-                        width: 160,
-
-                        backgroundColor: AppColors.primary,
-
-                        foregroundColor: Colors.white,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

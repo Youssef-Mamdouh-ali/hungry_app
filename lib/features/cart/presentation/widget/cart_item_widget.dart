@@ -4,6 +4,7 @@ import 'package:hungry_app/core/constant/app_colors.dart';
 import 'package:hungry_app/core/theme/app_text_style.dart';
 import 'package:hungry_app/core/widgets/custom_elevated_button.dart';
 import 'package:hungry_app/features/cart/domain/entities/cart_item_entity.dart';
+
 class CartItemWidget extends StatelessWidget {
   final CartItemEntity item;
   final VoidCallback onAdd;
@@ -22,81 +23,107 @@ class CartItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = item.product;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    product.image,
-                    width: 120,
-                    height: 90,
-                    fit: BoxFit.contain,
-                  ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
 
-                  Text(
-                    product.name,
-                    style: AppTextStyle.black16W700,
-                  ),
+        // Responsive values
+        final imageWidth = width < 360 ? 90.0 : 120.0;
+        final imageHeight = width < 360 ? 70.0 : 90.0;
 
-                  Text(
-                    product.description,
-                    style: AppTextStyle.black14Regular,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        final horizontalGap = width < 360 ? 10.0 : 20.0;
 
-                  Text(
-                    '\$ ${item.unitPrice.toStringAsFixed(2)}',
-                    style: AppTextStyle.black16W700,
-                  ),
-                ],
-              ),
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.all(
+              width < 360 ? 10 : 16,
             ),
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(
+              children: [
+                /// Product Information
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.center,
                     children: [
-                      _addIcon(onAdd),
-
-                      const Gap(20),
-
-                      Text(
-                        item.quantity.toString(),
-                        style: AppTextStyle.black16W700,
+                      Image.asset(
+                        product.image,
+                        width: imageWidth,
+                        height: imageHeight,
+                        fit: BoxFit.contain,
                       ),
 
-                      const Gap(20),
+                      Text(
+                        product.name,
+                        style: AppTextStyle.black16W700,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
 
-                      _removeIcon(onRemove),
+                      Text(
+                        product.description,
+                        style: AppTextStyle.black14Regular,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      Text(
+                        '\$ ${item.unitPrice.toStringAsFixed(2)}',
+                        style: AppTextStyle.black16W700,
+                      ),
                     ],
                   ),
+                ),
 
-                  const Gap(25),
+                // Quantity + Remove
 
-                  CustomElevatedButton(
-                    text: "Remove",
-                    onPressed: removeItem,
-                    height: 40,
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    fontSize: 18,
-                    borderRadius: 30,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.center,
+                        children: [
+                          _addIcon(onAdd),
+
+                          Gap(horizontalGap),
+
+                          Text(
+                            item.quantity.toString(),
+                            style: AppTextStyle.black16W700,
+                          ),
+
+                          Gap(horizontalGap),
+
+                          _removeIcon(onRemove),
+                        ],
+                      ),
+
+                      Gap(width < 360 ? 15 : 25),
+
+                      CustomElevatedButton(
+                        text: "Remove",
+                        onPressed: removeItem,
+                        height: 40,
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        fontSize: 18,
+                        borderRadius: 30,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
